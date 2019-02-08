@@ -46,6 +46,8 @@ if($items){
 
 	$subjectLink = "Interesting Links for $($linksEndTime.ToString("dd-MM-yyyy"))"
 
+	$output = $output -replace "‘|’","'"
+
 	Send-MailMessage -From $emailFrom -To $emailTo -Subject $subjectLink -Body $output -SmtpServer $smtpServer
 	}
 
