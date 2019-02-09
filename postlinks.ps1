@@ -1,10 +1,11 @@
 param(
 	[string]$pinboardUser = "",
-	[DateTime]$linksEndTime,
+	[DateTime]$linksEndTime = (get-date -Minute 0 -Second 0 -Hour 12 -Millisecond 0),
 	[string]$emailFrom = "",
 	[string]$emailTo = '',
 	[pscredential]$proxyCredentials,
-	[string]$smtpServer
+	[string]$smtpServer = "va-mail01.dreamwidth.org",
+	[switch]$TestMode
 )
 
 $wc = New-Object System.Net.WebClient
@@ -36,7 +37,7 @@ if($items){
 	}
 	$output += "</dl>"
 	
-	$output += "`n`n--`n"
+	$output += "`n`n--`n`n"
 	
 	if($tags){
 		$tags += "links"
@@ -46,6 +47,11 @@ if($items){
 
 	$subjectLink = "Interesting Links for $($linksEndTime.ToString("dd-MM-yyyy"))"
 
-	Send-MailMessage -From $emailFrom -To $emailTo -Subject $subjectLink -Body $output -SmtpServer $smtpServer
+	if($TestMode){
+		$output
 	}
+	else{
+		Send-MailMessage -From $emailFrom -To $emailTo -Subject $subjectLink -Body $output -SmtpServer $smtpServer
+	}
+}
 
