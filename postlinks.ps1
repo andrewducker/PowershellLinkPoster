@@ -14,7 +14,7 @@ if($proxyCredentials){
 }
 [xml]$feed = $wc.DownloadString("https://feeds.pinboard.in/rss/u:$pinboardUser/")
 
-$items = $feed.rdf.item | ? {[DateTime]::Parse($_.date) -gt $linksEndTime.AddDays(-1)}| ? {[DateTime]::Parse($_.date) -LE $linksEndTime}
+$items = $feed.rdf.item | ? {[DateTime]::Parse($_.date) -gt $linksEndTime.AddDays(-1)}| ? {[DateTime]::Parse($_.date) -LE $linksEndTime} | sort {[DateTime]::Parse($_.date)}
 
 if($items){
 	$tags = @()
