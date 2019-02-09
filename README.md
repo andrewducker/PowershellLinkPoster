@@ -15,4 +15,9 @@ i.e. `postlinks.ps1 -pinboardUser andrewducker -emailFrom andrew@ducker.org.uk -
 
 If you're inside a corporate firewall then you will probably need to set the ProxyCredentials parameter.  And unless you have external SMTP access you'll need an internal mail server (use the "smtpServer" parameter).
 
+And you can change the posting time from midday by overriding the "linksEndTime" parameter like so:
+
+`-linksEndTime = (get-date -Minute 0 -Second 0 -Hour 8 -Millisecond 0)`
+which will post linksfor the 24 hours preceding 8am this morning.
+
 All suggestions/merge requests gratefully received.
