@@ -48,7 +48,7 @@ if($items){
 	$subjectLink = "Interesting Links for $($linksEndTime.ToString("dd-MM-yyyy"))"
 
 	$output = $output -replace "‘|’","'"
-	$output = $output -replace "–","-"
+	$output = $output -replace '–',"-"
 	
 	if($TestMode){
 		$output
