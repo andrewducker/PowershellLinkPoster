@@ -1,5 +1,5 @@
 # PowershellLinkPoster
-Powershell Link Poster - Pinboard to Delicious
+Powershell Link Poster - Pinboard to Dreamwidth
 
 Note: This runs under PowerShell, which comes as default in Windows 10, and is available for Mac and Linux.  It uses the Dreamwidth "Post by Email" functionality.
 
@@ -18,6 +18,6 @@ If you're inside a corporate firewall then you will probably need to set the Pro
 And you can change the posting time from midday by overriding the "linksEndTime" parameter like so:
 
 `-linksEndTime = (get-date -Minute 0 -Second 0 -Hour 8 -Millisecond 0)`
-which will post linksfor the 24 hours preceding 8am this morning.
+which will post links for the 24 hours preceding 8am this morning.
 
 All suggestions/merge requests gratefully received.
