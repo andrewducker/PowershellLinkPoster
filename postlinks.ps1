@@ -49,6 +49,7 @@ if($items){
 
 	$output = $output -replace "‘|’","'"
 	$output = $output -replace '–',"-"
+	$output = $output -replace "`“|`”",'"'
 	
 	if($TestMode){
 		$output
