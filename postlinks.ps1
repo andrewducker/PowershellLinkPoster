@@ -25,7 +25,17 @@ Write-Verbose "Feed has $($feed.rdf.item.count) entries"
 
 $items = $feed.rdf.item | ? {[DateTime]::Parse($_.date) -gt $linksEndTime.AddDays(-1)}| ? {[DateTime]::Parse($_.date) -LE $linksEndTime} | sort {[DateTime]::Parse($_.date)}
 
-Write-Verbose "$($items.count) items selected"
+$itemCount = 0
+if($items){
+	if($items.count){
+		$itemCount = $items.Count
+	}
+	else{
+		$itemCount = 1
+	}
+}
+
+Write-Verbose "$itemCount items selected"
 
 if($items){
 	$tags = @()
