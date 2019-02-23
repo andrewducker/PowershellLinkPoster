@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param(
 	[string]$pinboardUser = "",
 	[DateTime]$linksEndTime = (get-date -Minute 0 -Second 0 -Hour 12 -Millisecond 0),
@@ -10,11 +11,21 @@ param(
 
 $wc = New-Object System.Net.WebClient
 if($proxyCredentials){
+	Write-Verbose "Fetching from Pinboard using Proxy"
 	$wc.Proxy.Credentials = $proxyCredentials
 }
-[xml]$feed = $wc.DownloadString("https://feeds.pinboard.in/rss/u:$pinboardUser/")
+
+
+$pinboardUrl = "https://feeds.pinboard.in/rss/u:$pinboardUser/"
+Write-Verbose "Fetching from $pinboardUrl"
+[xml]$feed = $wc.DownloadString($pinboardUrl)
+
+
+Write-Verbose "Feed has $($feed.rdf.item.count) entries"
 
 $items = $feed.rdf.item | ? {[DateTime]::Parse($_.date) -gt $linksEndTime.AddDays(-1)}| ? {[DateTime]::Parse($_.date) -LE $linksEndTime} | sort {[DateTime]::Parse($_.date)}
+
+Write-Verbose "$($items.count) items selected"
 
 if($items){
 	$tags = @()
