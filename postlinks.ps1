@@ -58,7 +58,7 @@ if($items){
 	}
 	$output += "</dl>"
 	
-	$output += "`n`n--`n`n"
+	$output += "`n`n--`n`nDeletetionTrigger"
 	
 	if($tags){
 		$tags += "links"
