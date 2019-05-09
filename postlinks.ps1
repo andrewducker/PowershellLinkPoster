@@ -76,7 +76,7 @@ if($items){
 		$output
 	}
 	else{
-		Send-MailMessage -From $emailFrom -To $emailTo -Subject $subjectLink -Body $output -SmtpServer $smtpServer
+		Send-MailMessage -From $emailFrom -To $emailTo -Subject $subjectLink -Body $output -SmtpServer $smtpServer -encoding UTF8
 	}
 }
 
