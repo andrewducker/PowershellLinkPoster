@@ -2,6 +2,7 @@
 param(
 	[string]$pinboardUser = "",
 	[DateTime]$linksEndTime = (get-date -Minute 0 -Second 0 -Hour 12 -Millisecond 0),
+	[int]$daysPrevious,
 	[string]$emailFrom = "",
 	[string]$emailTo = '',
 	[pscredential]$proxyCredentials,
@@ -22,6 +23,12 @@ Write-Verbose "Fetching from $pinboardUrl"
 
 
 Write-Verbose "Feed has $($feed.rdf.item.count) entries"
+
+if($daysPrevious){
+	$linksEndTime = $linksEndTime.AddDays(-$daysPrevious)
+}
+
+Write-Verbose "Selecting links for 24 hours preceding $linksendTime"
 
 $items = $feed.rdf.item | ? {[DateTime]::Parse($_.date) -gt $linksEndTime.AddDays(-1)}| ? {[DateTime]::Parse($_.date) -LE $linksEndTime} | sort {[DateTime]::Parse($_.date)}
 
