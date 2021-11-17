@@ -10,17 +10,12 @@ param(
 	[switch]$TestMode
 )
 
-$wc = New-Object System.Net.WebClient
-if($proxyCredentials){
-	Write-Verbose "Fetching from Pinboard using Proxy"
-	$wc.Proxy.Credentials = $proxyCredentials
-}
-
-
 $pinboardUrl = "https://feeds.pinboard.in/rss/u:$pinboardUser/"
 Write-Verbose "Fetching from $pinboardUrl"
-[xml]$feed = $wc.DownloadString($pinboardUrl)
+$response = (Invoke-WebRequest $pinboardUrl -ProxyCredential $proxyCredentials).Content
 
+#Unmangle the response.  Powershell resorts to the wrong encoding.  *sigh*
+[xml]$feed = [System.Text.Encoding]::UTF8.GetString([System.Text.Encoding]::GetEncoding(28591).GetBytes($response))
 
 Write-Verbose "Feed has $($feed.rdf.item.count) entries"
 
@@ -30,7 +25,9 @@ if($daysPrevious){
 
 Write-Verbose "Selecting links for 24 hours preceding $linksendTime"
 
-$items = $feed.rdf.item | ? {[DateTime]::Parse($_.date) -gt $linksEndTime.AddDays(-1)}| ? {[DateTime]::Parse($_.date) -LE $linksEndTime} | sort {[DateTime]::Parse($_.date)}
+$items = $feed.rdf.item | select link,title,description,subject, @{n="date"; e={[DateTime]::Parse($_.date).AddHours(4)}}
+
+$items = $items | ? date -gt $linksEndTime.AddDays(-1)| ? date -LE $linksEndTime | sort date
 
 $itemCount = 0
 if($items){
