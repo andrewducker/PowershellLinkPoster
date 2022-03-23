@@ -7,7 +7,8 @@ param(
 	[string]$emailTo = '',
 	[pscredential]$proxyCredentials,
 	[string]$smtpServer = "va-mail01.dreamwidth.org",
-	[switch]$TestMode
+	[switch]$TestMode,
+	[switch]$NumberEntries
 )
 
 $pinboardUrl = "https://feeds.pinboard.in/rss/u:$pinboardUser/"
@@ -44,8 +45,14 @@ Write-Verbose "$itemCount items selected"
 if($items){
 	$tags = @()
 	$output = "<dl class=`"links`">"
+	$number = 1
 	foreach($item in $items){
-		$output+="<dt class=`"link`"><a href=`"$($item.link)`" rel=`"nofollow`">$($item.Title)</a></dt>"
+		$title = $item.title
+		if($NumberEntries){
+			$title = "$number. $title"
+			$number++
+		}
+		$output+="<dt class=`"link`"><a href=`"$($item.link)`" rel=`"nofollow`">$Title</a></dt>"
 		$output+="<dd style=`"margin-bottom: 0.5em;`">"
 		if($item.Description){
 			$output += "<span class=`"link-description`">$($item.description.'#cdata-section')</span><BR/>"
