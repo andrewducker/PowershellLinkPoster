@@ -26,7 +26,7 @@ if($daysPrevious){
 
 Write-Verbose "Selecting links for 24 hours preceding $linksendTime"
 
-$items = $feed.rdf.item | select link,title,description,subject, @{n="date"; e={[DateTime]::Parse($_.date).AddHours(4)}}
+$items = $feed.rdf.item | select link,title,description,subject, @{n="date"; e={[DateTime]::Parse($_.date).AddHours(0)}}
 
 $items = $items | ? date -gt $linksEndTime.AddDays(-1)| ? date -LE $linksEndTime | sort date
 
