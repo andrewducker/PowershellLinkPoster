@@ -8,7 +8,8 @@ param(
 	[pscredential]$proxyCredentials,
 	[string]$smtpServer = "va-mail01.dreamwidth.org",
 	[switch]$TestMode,
-	[switch]$NumberEntries
+	[switch]$NumberEntries,
+	[switch]$manuallySelect
 )
 
 $pinboardUrl = "https://feeds.pinboard.in/rss/u:$pinboardUser/"
@@ -26,9 +27,14 @@ if($daysPrevious){
 
 Write-Verbose "Selecting links for 24 hours preceding $linksendTime"
 
-$items = $feed.rdf.item | select link,title,description,subject, @{n="date"; e={[DateTime]::Parse($_.date).AddHours(4)}}
+$items = $feed.rdf.item | select link,title,description,subject, @{n="date"; e={[DateTime]::Parse($_.date).AddHours(0)}}
 
-$items = $items | ? date -gt $linksEndTime.AddDays(-1)| ? date -LE $linksEndTime | sort date
+if($manuallySelect){
+	$items = $items | ogv -passthru
+}else{
+	$items = $items | ? date -gt $linksEndTime.AddDays(-1)| ? date -LE $linksEndTime | sort date	
+}
+
 
 $itemCount = 0
 if($items){
@@ -69,7 +75,7 @@ if($items){
 	}
 	$output += "</dl>"
 	
-	$output += "`n`n--`n`nDeletetionTrigger"
+	$output += "`n`n--`n`nDeletionTrigger"
 	
 	if($tags){
 		$tags += "links"
